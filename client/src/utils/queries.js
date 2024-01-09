@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client';
 
+//todo may need to add functionality to query all users for login auth stuff, add _id to various places including server folder
+
 export const QUERY_USER = gql `
     query user {
         user {
