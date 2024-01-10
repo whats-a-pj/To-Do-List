@@ -5,12 +5,12 @@ const todoSchema = new Schema(
         todo: {
             type: String,
         },
-        user: [{
-            type: Schema.Types.ObjectId,
-            ref: 'User',
-        }]
+        // user: [{
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'User',
+        // }]
     }
 );
 
-const Todos = model('Todos', todoSchema);
-module.exports = Todos;
+// const Todos = model('Todos', todoSchema);
+module.exports = todoSchema;
