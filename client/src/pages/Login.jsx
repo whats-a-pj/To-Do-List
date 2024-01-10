@@ -1,22 +1,45 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
+import { useMutation } from '@apollo/client';
+import { LOGIN_USER, CREATE_USER } from '../../utils/mutation';
+import Auth from '../../utils/auth';
 
 function LoginSignup() {
-  const [loginUsername, setLoginUsername] = useState('');
-  const [loginPassword, setLoginPassword] = useState('');
-  const [signupUsername, setSignupUsername] = useState('');
-  const [signupPassword, setSignupPassword] = useState('');
+  // const [loginUsername, setLoginUsername] = useState('');
+  // const [loginPassword, setLoginPassword] = useState('');
+  // const [signupUsername, setSignupUsername] = useState('');
+  // const [signupPassword, setSignupPassword] = useState('');
 
-  const handleLoginSubmit = (event) => {
-    event.preventDefault();
-    //todo add login logic
-    console.log('Login submitted:', { loginUsername, loginPassword });
-  };
+  const [loginForm, setLoginData] = useState({ username: '', password: '' });
+	const [loginUser, { error }] =
+		useMutation(LOGIN_USER);
+	// update state based on form input changes
+	const handleChange = (event) => {
+	const { name, value } = event.target;
+	setLoginData({
+		...loginForm,
+		[name]: value,
+	});
+	};
+	// submit form
+	const handleLoginSubmit = async (event) => {
+	event.preventDefault();
+	console.log(loginForm);
+	try {
+		const { data } = await loginUser({
+			variables: { ...loginForm },
+		});
+		Auth.login(data.loginUser.token);
+	
+	} catch (e) {
+		console.error(e);
+	}
+	};
 
-  const handleSignupSubmit = (event) => {
-    event.preventDefault();
-    //todo add signup logic
-    console.log('Signup submitted:', { signupUsername, signupPassword });
-  };
+  // const handleSignupSubmit = (event) => {
+  //   event.preventDefault();
+  //   //todo add signup logic
+  //   console.log('Signup submitted:', { signupUsername, signupPassword });
+  // };
 
   return (
     <div className="flex flex-row h-screen">
@@ -29,8 +52,8 @@ function LoginSignup() {
               type="text"
               id="loginUsername"
               className="border-2 border-lime-700 rounded p-1 w-3/4"
-              value={loginUsername}
-              onChange={(e) => setLoginUsername(e.target.value)}
+              value={loginForm.username}
+              onChange={(e) => handleChange(e.target.value)}
             />
           </div>
           <div>
@@ -39,8 +62,8 @@ function LoginSignup() {
               type="password"
               id="loginPassword"
               className="border-2 border-lime-700 rounded p-1 w-3/4"
-              value={loginPassword}
-              onChange={(e) => setLoginPassword(e.target.value)}
+              value={loginForm.password}
+              onChange={(e) => handleChange(e.target.value)}
             />
           </div>
           <button type="submit" className="bg-green-700 text-white rounded p-2 w-3/4">Login</button>
