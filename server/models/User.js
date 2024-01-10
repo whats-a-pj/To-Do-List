@@ -1,6 +1,8 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcrypt');
 
+const todoSchema = require('./Todos');
+
 const userSchema = new Schema(
     {
         username: {
@@ -13,17 +15,18 @@ const userSchema = new Schema(
             type: String,
             required: true,
         },
-        todos: [{
-            type: Schema.Types.ObjectId,
-            ref: 'Todos',
-        }],
+        // todos: [{
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'Todos',
+        // }],
+        todos: [todoSchema]
     },
-        {
-            toJSON: {
-                virtuals: true,
-            },
-            id: false,
-        }
+    {
+        toJSON: {
+            virtuals: true,
+        },
+        // id: false,
+    }
 );
 
 userSchema.pre('save', async function (next) {
